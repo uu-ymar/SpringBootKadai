@@ -1,0 +1,52 @@
+【社員テーブル】
+CREATE TABLE T_EMPLOYEE (
+    e_id VARCHAR(10) NOT NULL,
+    e_name VARCHAR(50) NOT NULL,
+    e_kana VARCHAR(50) NOT NULL,
+    birthday DATE NOT NULL,
+    d_id CHAR(6) DEFAULT NULL,
+    e_tel VARCHAR(16) NOT NULL,
+    e_email VARCHAR(254) NOT NULL,
+    e_created_day DATE NOT NULL,
+    e_update_day DATE DEFAULT NULL,
+    e_created_name VARCHAR(10) NOT NULL,
+    e_update_name VARCHAR(10) DEFAULT NULL,
+    delete_flag INT NOT NULL DEFAULT 0,
+    PRIMARY KEY (e_id),
+    CONSTRAINT FK_division_id FOREIGN KEY (d_id)
+        REFERENCES M_DIVISION (d_id)
+        ON DELETE SET NULL
+        ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+【顧客テーブル】
+CREATE TABLE T_CUSTOMER (
+    c_id VARCHAR(10) NOT NULL,
+    company VARCHAR(255) NOT NULL,
+    address VARCHAR(255) NOT NULL,
+    c_tel VARCHAR(16) NOT NULL,
+    c_email VARCHAR(254) NOT NULL,
+    person VARCHAR(50) NOT NULL,
+    c_created_day DATE NOT NULL,
+    c_update_day DATE DEFAULT NULL,
+    c_created_name VARCHAR(10) NOT NULL,
+    c_update_name VARCHAR(10) DEFAULT NULL,
+    c_delete_day INT NOT NULL DEFAULT 0,
+    PRIMARY KEY (c_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+【部署テーブル】
+CREATE TABLE M_DIVISION (
+    d_id CHAR(6) NOT NULL,
+    delete_flag INT NOT NULL DEFAULT 0,
+    PRIMARY KEY (d_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+【ログインマスタ】
+CREATE TABLE M_USER (
+    admin_id CHAR(6) NOT NULL,
+    admin_name VARCHAR(50) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    create_day DATE NOT NULL,
+    PRIMARY KEY (admin_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
