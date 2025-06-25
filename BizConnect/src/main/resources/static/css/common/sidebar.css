@@ -1,0 +1,36 @@
+@charset "UTF-8";
+@charset "UTF-8";
+body {
+		      margin: 0;
+		      font-family: 'Arial', sans-serif;
+		    }
+		    .sidebar {
+		      height: 100vh;
+		      background-color: #343a40;
+		      color: white;
+		      padding: 20px;
+			  padding-right: 100px;
+		    }
+		    .sidebar h6 {
+		      font-size: 0.9rem;
+		      margin-top: 20px;
+		      margin-bottom: 10px;
+		      color: #adb5bd;
+		    }
+		    .sidebar a {
+		      color: white;
+		      text-decoration: none;
+		      display: block;
+		      margin: 5px 0;
+		    }
+		    .sidebar a:hover {
+		      text-decoration: underline;
+		    }
+		    .content {
+		      padding: 30px;
+		    }
+		    .login-user {
+		      font-size: 0.9rem;
+		      margin-top: 50px;
+		      color: #ced4da;
+		    }
