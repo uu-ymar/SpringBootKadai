@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>社員データ編集</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/include.js"></script>
+    <link rel="stylesheet" th:href="@{/css/employee/s-edit.css}" />
+</head>
+<body>
+    <div class="d-flex" style="min-height: 100vh;">
+        <div id="sidebar-container"></div>
+        <div class="content flex-grow-1 p-4">
+            <h3>社員検索・更新</h3>
+            <form th:action="@{/employee/edit}" method="get" class="search-form border rounded p-3 bg-light">
+                <div class="row align-items-end mb-3">
+                    <div class="col-md-2">
+                        <label for="eId" class="form-label">社員ID</label>
+                        <input type="text" class="form-control" id="eId" name="eId" th:value="${param.eId}" placeholder="例：EMP0000" />
+                    </div>
+                    <div class="col-md-2">
+                        <label for="dId" class="form-label">部署ID</label>
+                        <input type="text" class="form-control" id="dId" name="dId" th:value="${param.dId}" placeholder="例：DVI001" />
+                    </div>
+                    <div class="col-md-2">
+                        <label for="dName" class="form-label">部署名</label>
+                        <input type="text" class="form-control" id="dName" name="dName" th:value="${param.dName}" />
+                    </div>
+                    <div class="col-md-2">
+                        <label for="eName" class="form-label">氏名（漢字）</label>
+                        <input type="text" class="form-control" id="eName" name="eName" th:value="${param.eName}" />
+                    </div>
+                    <div class="col-md-2">
+                        <label for="eKana" class="form-label">氏名（かな）</label>
+                        <input type="text" class="form-control" id="eKana" name="eKana" th:value="${param.eKana}" />
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100">検索</button>
+                    </div>
+                </div>
+            </form>
+
+            <table class="table table-bordered">
+                <thead class="table-dark">
+                    <tr>
+                        <th>社員ID</th>
+                        <th>氏名</th>
+                        <th>部署</th>
+                        <th>連絡先</th>
+                        <th class="operation-col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="emp : ${employeeList}">
+                        <td th:text="${emp.eId}" class="pointer" th:attr="data-eid=${emp.eId}"></td>
+                        <td th:text="${emp.eName}" class="pointer" th:attr="data-eid=${emp.eId}"></td>
+                        <td th:text="${emp.dName}" class="pointer" th:attr="data-eid=${emp.eId}"></td>
+                        <td th:text="${emp.eTel}" class="pointer" th:attr="data-eid=${emp.eId}"></td>
+                        <td class="operation-col align-middle">
+                            <form th:action="@{/employee/delete}" method="post" class="delete-form" th:attr="data-eid=${emp.eId}" style="display:inline;">
+                                <input type="hidden" name="eId" th:value="${emp.eId}" />
+                                <button type="submit" class="btn btn-danger btn-sm btn-delete">削除</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        window.loginUserName = "[[${loginUserName}]]";
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // テーブルの社員行クリックで編集画面へ遷移
+            document.querySelectorAll('td.pointer[data-eid]').forEach(function(td) {
+                td.addEventListener('click', function() {
+                    var eid = td.getAttribute('data-eid');
+                    location.href = '/employee/update?eId=' + encodeURIComponent(eid);
+                });
+            });
+
+            // 削除ボタンの確認
+            document.querySelectorAll('.delete-form').forEach(function(form) {
+                form.addEventListener('submit', function(e) {
+                    if (!confirm('本当に削除してよろしいですか？')) {
+                        e.preventDefault();
+                    }
+                });
+            });
+
+            // 削除完了後のアラート
+            const url = new URL(window.location.href);
+            if (url.searchParams.get("deleted") === "1") {
+                alert("削除しました。");
+            }
+        });
+    </script>
+</body>
+</html>

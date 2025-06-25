@@ -1,0 +1,27 @@
+@charset "UTF-8";
+
+table {
+    background-color: white;
+}
+
+.search-form {
+    max-width: 900px;
+    margin-bottom: 2rem;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+th.operation-col,
+td.operation-col {
+    width: 60px;
+    text-align: center;
+    vertical-align: middle !important;
+}
+
+.btn-delete {
+    padding: 0.2rem 0.3rem;
+    font-size: 1rem;
+    line-height: 1;
+}
