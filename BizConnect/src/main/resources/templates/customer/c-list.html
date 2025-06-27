@@ -24,6 +24,7 @@
                     </tr>
                 </thead>
                 <tbody>
+					<!-- customerListを一件ずつ取り出して変数customerに格納 -->
                     <tr th:each="customer : ${customerList}">
                         <td th:text="${customer.company}"></td>
                         <td th:text="${customer.address}"></td>
@@ -34,6 +35,7 @@
             </table>
         </div>
         <script>
+			// sidebar.htmlを表示するjs
             window.loginUserName = "[[${loginUserName}]]";
         </script>
     </div>

@@ -19,6 +19,10 @@ import com.biz.connect.form.EmployeeForm;
 import com.biz.connect.mapper.DivisionMapper;
 import com.biz.connect.mapper.EmployeeMapper;
 
+/**
+ * 社員情報管理用のWebコントローラクラス
+ * 社員の一覧表示・登録・編集・論理削除などを管理
+ */
 @Controller  // このクラスがWebコントローラであることを示す
 public class EmployeeController {
 
@@ -28,17 +32,24 @@ public class EmployeeController {
     @Autowired
     private DivisionMapper divisionMapper;  // 部署データへのDB操作用（登録・更新時に部署IDの妥当性確認で使用）
 
-    // 社員一覧表示
+    /**
+     * 社員一覧画面の表示
+     * ログインユーザー名/IDも画面に渡す
+     */
     @GetMapping("/employee/list")
     public String showEmployeeList(Model model, HttpSession session) {
-        List<Employee> employeeList = employeeMapper.findAllWithDivision();  // 社員＋部署情報をJOINして取得
+        // 社員＋部署情報をJOINしてDBから全件取得
+        List<Employee> employeeList = employeeMapper.findAllWithDivision();
         model.addAttribute("employeeList", employeeList);
         model.addAttribute("loginUserName", session.getAttribute("loginUserName"));  // ログインユーザー表示用
-        model.addAttribute("loginUserId", session.getAttribute("loginUserId"));  // ログイン中のID
+        model.addAttribute("loginUserId", session.getAttribute("loginUserId"));      // ログイン中のID
         return "employee/s-list";  // 一覧画面（Thymeleafテンプレート）
     }
 
-    // 社員登録画面の表示
+    /**
+     * 社員登録画面の表示
+     * 空のフォームオブジェクトとログイン情報を画面に渡す
+     */
     @GetMapping("/employee/regist")
     public String showRegist(Model model, HttpSession session) {
         model.addAttribute("employeeForm", new EmployeeForm());  // 空のフォームオブジェクト
@@ -47,7 +58,10 @@ public class EmployeeController {
         return "employee/s-regist";
     }
 
-    // 社員登録処理
+    /**
+     * 社員登録処理
+     * 入力値のバリデーション、ID重複・部署ID存在チェック、DB登録
+     */
     @PostMapping("/employee/regist")
     public String doRegist(
             @ModelAttribute("employeeForm") @Validated EmployeeForm form,  // 入力値をバリデーション付きで取得
@@ -90,7 +104,10 @@ public class EmployeeController {
         return "redirect:/employee/list";  // 一覧画面へリダイレクト
     }
 
-    // 社員編集画面（検索付き一覧）
+    /**
+     * 社員編集画面（検索付き一覧）の表示
+     * 検索条件があれば条件付きで一覧取得
+     */
     @GetMapping("/employee/edit")
     public String editEmployeeList(
         @RequestParam(name = "eId", required = false) String eId,
@@ -100,7 +117,7 @@ public class EmployeeController {
         @RequestParam(name = "dName", required = false) String dName,
         HttpSession session, Model model
     ) {
-        // 入力条件をもとに社員一覧を取得
+        // 入力条件をもとに社員一覧を取得（部分一致検索など）
         List<Employee> employeeList = employeeMapper.findByConditions(eId, eName, eKana, dId, dName);
 
         model.addAttribute("employeeList", employeeList);
@@ -109,7 +126,10 @@ public class EmployeeController {
         return "employee/s-edit";
     }
 
-    // 更新フォームの表示（該当社員をEmployeeFormに変換）
+    /**
+     * 更新フォームの表示
+     * 既存社員データをEmployeeFormに詰めて画面に渡す
+     */
     @GetMapping("/employee/update")
     public String showUpdateForm(@RequestParam("eId") String eId, HttpSession session, Model model) {
         Employee employee = employeeMapper.findById(eId);  // 編集対象の社員データ取得
@@ -120,7 +140,10 @@ public class EmployeeController {
         return "employee/s-update";  // 更新画面表示
     }
 
-    // 社員情報の更新処理
+    /**
+     * 社員情報の更新処理
+     * 入力チェック・部署ID存在チェック・DB更新
+     */
     @PostMapping("/employee/update")
     public String updateEmployee(
         @Validated @ModelAttribute("employeeForm") EmployeeForm employeeForm,
@@ -137,6 +160,7 @@ public class EmployeeController {
             }
         }
 
+        // 入力エラーがある場合は元の更新画面へ戻す
         if (bindingResult.hasErrors()) {
             return "employee/s-update";  // エラー時は更新画面へ戻す
         }
@@ -157,7 +181,10 @@ public class EmployeeController {
         return "redirect:/employee/edit";  // 編集画面へ戻る
     }
 
-    // 論理削除処理
+    /**
+     * 論理削除処理
+     * 指定した社員IDの論理削除を実行（削除フラグを有効化）
+     */
     @PostMapping("/employee/delete")
     public String deleteEmployee(@RequestParam("eId") String eId) {
         employeeMapper.logicalDelete(eId);

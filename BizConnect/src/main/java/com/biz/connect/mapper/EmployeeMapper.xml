@@ -5,7 +5,11 @@
 
 <mapper namespace="com.biz.connect.mapper.EmployeeMapper">
 
-    <!-- ここを追加 -->
+    <!--
+        社員情報（T_EMPLOYEE, M_DIVISION）の検索結果を
+        EmployeeドメインクラスにマッピングするためのresultMap定義
+        DBカラム名とJavaプロパティ名の対応を明示
+    -->
     <resultMap id="EmployeeResultMap" type="com.biz.connect.domain.Employee">
         <result property="eId" column="e_id"/>
         <result property="eName" column="e_name"/>
@@ -16,8 +20,13 @@
         <result property="eTel" column="e_tel"/>
         <result property="eEmail" column="e_email"/>
     </resultMap>
-    <!-- ここまで -->
 
+    <!--
+        条件付き社員検索SQL
+        - 社員と部署をLEFT JOINし、論理削除されていない社員のみ取得
+        - 各検索条件（社員ID・名前・カナ・部署ID・部署名）が指定されていればWHERE句に反映
+        - 結果はEmployeeResultMapでマッピング
+    -->
     <select id="findByConditions" resultMap="EmployeeResultMap">
         SELECT 
             e.e_id,
@@ -49,6 +58,11 @@
         ORDER BY e.e_id
     </select>
 
+    <!--
+        社員情報の更新SQL
+        - 社員ID（e_id）が一致するレコードを
+          フォームの内容で更新する
+    -->
     <update id="update" parameterType="com.biz.connect.domain.Employee">
         UPDATE T_EMPLOYEE
         SET

@@ -27,7 +27,7 @@ public class LoginController {
     // ログイン画面を表示（GETリクエスト時）
     @GetMapping("/login")
     public String showLoginForm() {
-        return "login/login";  // login/login.html（Thymeleaf）を返す
+        return "login/login";  // login/login.htmlを返す
     }
 
     // ログイン処理（POSTリクエスト時）
@@ -54,17 +54,17 @@ public class LoginController {
         return "login/login";
     }
 
-    // パスワードをSHA-256でハッシュ化するメソッド
+    // パスワードをSHA-256でハッシュ化するメソッド(AI作成)
     private String sha256(String base) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hash = digest.digest(base.getBytes());
             StringBuilder hexString = new StringBuilder();
             for (byte b : hash)
-                hexString.append(String.format("%02x", b));  // 各バイトを16進数に変換
+                hexString.append(String.format("%02x", b));
             return hexString.toString();
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);  // 実行時例外として投げる
+            throw new RuntimeException(e);
         }
     }
 
